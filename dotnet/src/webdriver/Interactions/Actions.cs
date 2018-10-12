@@ -111,16 +111,24 @@ namespace OpenQA.Selenium.Interactions
             }
 
             ILocatable target = GetLocatableFromElement(element);
-            this.action.AddAction(new KeyDownAction(this.keyboard, this.mouse, target, theKey));
-            if (element != null)
-            {
-                this.actionBuilder.AddAction(this.defaultMouse.CreatePointerMove(element, 0, 0, DefaultMouseMoveDuration));
-                this.actionBuilder.AddAction(this.defaultMouse.CreatePointerDown(MouseButton.Left));
-                this.actionBuilder.AddAction(this.defaultMouse.CreatePointerUp(MouseButton.Left));
-            }
 
-            this.actionBuilder.AddAction(this.defaultKeyboard.CreateKeyDown(theKey[0]));
-            this.actionBuilder.AddAction(new PauseInteraction(this.defaultKeyboard, TimeSpan.FromMilliseconds(100)));
+            if (this.actionExecutor.IsActionExecutor)
+            {
+                if (element != null)
+                {
+                    this.actionBuilder.AddAction(this.defaultMouse.CreatePointerMove(element, 0, 0, DefaultMouseMoveDuration));
+                    this.actionBuilder.AddAction(this.defaultMouse.CreatePointerDown(MouseButton.Left));
+                    this.actionBuilder.AddAction(this.defaultMouse.CreatePointerUp(MouseButton.Left));
+                }
+
+                this.actionBuilder.AddAction(this.defaultKeyboard.CreateKeyDown(theKey[0]));
+                this.actionBuilder.AddAction(new PauseInteraction(this.defaultKeyboard, TimeSpan.FromMilliseconds(100)));
+            }
+            else
+            {
+                this.action.AddAction(new KeyDownAction(this.keyboard, this.mouse, target, theKey));
+            }
+            
             return this;
         }
 
@@ -156,15 +164,23 @@ namespace OpenQA.Selenium.Interactions
             }
 
             ILocatable target = GetLocatableFromElement(element);
-            this.action.AddAction(new KeyUpAction(this.keyboard, this.mouse, target, theKey));
-            if (element != null)
-            {
-                this.actionBuilder.AddAction(this.defaultMouse.CreatePointerMove(element, 0, 0, DefaultMouseMoveDuration));
-                this.actionBuilder.AddAction(this.defaultMouse.CreatePointerDown(MouseButton.Left));
-                this.actionBuilder.AddAction(this.defaultMouse.CreatePointerUp(MouseButton.Left));
-            }
 
-            this.actionBuilder.AddAction(this.defaultKeyboard.CreateKeyUp(theKey[0]));
+            if (this.actionExecutor.IsActionExecutor)
+            {
+                if (element != null)
+                {
+                    this.actionBuilder.AddAction(this.defaultMouse.CreatePointerMove(element, 0, 0, DefaultMouseMoveDuration));
+                    this.actionBuilder.AddAction(this.defaultMouse.CreatePointerDown(MouseButton.Left));
+                    this.actionBuilder.AddAction(this.defaultMouse.CreatePointerUp(MouseButton.Left));
+                }
+
+                this.actionBuilder.AddAction(this.defaultKeyboard.CreateKeyUp(theKey[0]));
+            }
+            else
+            {
+                this.action.AddAction(new KeyUpAction(this.keyboard, this.mouse, target, theKey));
+            }
+            
             return this;
         }
 
